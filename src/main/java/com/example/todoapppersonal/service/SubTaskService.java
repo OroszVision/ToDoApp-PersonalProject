@@ -42,8 +42,7 @@ public class SubTaskService {
                 savedSubTask.getId(),
                 savedSubTask.getTitle(),
                 savedSubTask.getDescription(),
-                savedSubTask.isCompleted(),
-                savedSubTask.getMainTask().getId()
+                savedSubTask.isCompleted()
         );
     }
 
@@ -71,8 +70,7 @@ public class SubTaskService {
                             savedSubTask.getId(),
                             savedSubTask.getTitle(),
                             savedSubTask.getDescription(),
-                            savedSubTask.isCompleted(),
-                            savedSubTask.getMainTask().getId()
+                            savedSubTask.isCompleted()
                     );
                 } else {
                     throw new AccessDeniedException("You don't have permission to update this SubTask.");

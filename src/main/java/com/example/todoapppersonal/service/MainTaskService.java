@@ -1,9 +1,7 @@
 package com.example.todoapppersonal.service;
 
 import com.example.todoapppersonal.dto.*;
-import com.example.todoapppersonal.model.AppUser;
-import com.example.todoapppersonal.model.MainTask;
-import com.example.todoapppersonal.model.Role;
+import com.example.todoapppersonal.model.*;
 import com.example.todoapppersonal.repository.IMainTaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,6 +16,7 @@ import java.util.stream.Collectors;
 public class MainTaskService {
     private final IMainTaskRepository mainTaskRepository;
     private final TaskRoleService taskRoleService;
+    private final FriendshipService friendshipService;
 
     public MainTaskResponseDto createMainTask(CreateMainTaskDto taskDto, AppUser currentUser) {
         try {
@@ -133,6 +132,23 @@ public class MainTaskService {
             // Obecné zachycení jakýchkoli jiných výjimek
             throw new RuntimeException("Failed to delete task: " + ex.getMessage());
         }
+    }
+
+    public void assignCollaborator(Long taskId, AppUser owner, AppUser collaborator) {
+        // Ověření, že jsou přátelé
+        if (!friendshipService.getFriends(owner).contains(collaborator)) {
+            throw new RuntimeException("User is not a friend");
+        }
+
+        MainTask task = mainTaskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+
+        CreateTaskRoleDto createTaskRoleDto = new CreateTaskRoleDto();
+        createTaskRoleDto.setMainTask(task);
+        createTaskRoleDto.setUser(collaborator);
+        createTaskRoleDto.setRole(Role.COLLABORATOR);
+
+        taskRoleService.createTaskRole(createTaskRoleDto);
     }
 
     private MainTaskWithSubTasksDto mapToMainTaskWithSubTasksDto(MainTask mainTask) {

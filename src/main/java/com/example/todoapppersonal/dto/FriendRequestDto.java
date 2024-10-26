@@ -1,6 +1,5 @@
 package com.example.todoapppersonal.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubTaskResponseDto {
-    private Long id;
-    private String title;
-    private String description;
-    private boolean completed;
+public class FriendRequestDto {
+    private Long friendshipId;  // Přidání ID přátelství
+    private String friendUsername;
 }
